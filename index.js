@@ -38,18 +38,46 @@ async function run() {
             const result = await alltaskCollection.find().toArray()
             res.send(result)
         });
+        app.delete("/allproject/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await alltaskCollection.deleteOne(query);
+            res.send(result)
+        });
 
-        app.get("/assignmentdetails/:id", async (req, res) => {
+        app.get("/updatepage/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await alltaskCollection.findOne(query);
+            res.send(result)
+        });
+        app.put("/updatepage/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedatainfo = req.body;
+            console.log(updatedatainfo)
+            const options = { upsert: true };
+            // Specify the update to set a value for the plot field
+            const updateDoc = {
+                $set: {
+                    ...updatedatainfo
+                },
+            };
+            // Update the first document that matches the filter
+            const result = await alltaskCollection.updateOne(filter, updateDoc, options);
             res.send(result)
         });
 
         // post 
         app.post("/bidassignment", async (req, res) => {
             const info = req.body;
-            console.log(info)
+            const result = await bidCollection.insertOne(info)
+            res.send(result)
+        })
+        app.post("/allproject", async (req, res) => {
+            const info = req.body;
+            const result = await alltaskCollection.insertOne(info)
+            res.send(result)
         })
 
     } finally {

@@ -103,8 +103,16 @@ async function run() {
         // markassignment
         app.patch("/assignmentresult/:id", async (req, res) => {
             const id = req.params?.id
-            const query = { _id: new ObjectId(id) }
-            const result = await bidCollection.findOne(query);
+            const body = req.body;
+            const filter = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    status: body.status,
+                    obtainedmarks: body.obtainedmarks,
+                    textarea : body.textarea
+                },
+            };
+            const result = await bidCollection.updateOne(filter, updateDoc);
             res.send(result)
         })
 

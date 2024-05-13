@@ -51,6 +51,15 @@ async function run() {
             const result = await alltaskCollection.findOne(query);
             res.send(result)
         });
+
+        app.get("/assignmentdetails/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await alltaskCollection.findOne(query);
+            res.send(result)
+        });
+
+
         app.put("/updatepage/:id", async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
@@ -67,6 +76,37 @@ async function run() {
             const result = await alltaskCollection.updateOne(filter, updateDoc, options);
             res.send(result)
         });
+
+        // my added post show 
+        app.get("/mysubmitted/:email", async (req, res) => {
+            const email = req.params?.email
+            const query = { email }
+            const result = await bidCollection.find(query).toArray()
+            res.send(result)
+        })
+        // pendingadded post show 
+        app.get("/pendingsubmitted/:email", async (req, res) => {
+            const email = req.params?.email
+            const query = { "bayer.bayerEmail": email }
+            const result = await bidCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        // markassignment
+        app.get("/markassignment/:id", async (req, res) => {
+            const id = req.params?.id
+            const query = { _id: new ObjectId(id) }
+            const result = await bidCollection.findOne(query);
+            res.send(result)
+        })
+
+        // markassignment
+        app.patch("/assignmentresult/:id", async (req, res) => {
+            const id = req.params?.id
+            const query = { _id: new ObjectId(id) }
+            const result = await bidCollection.findOne(query);
+            res.send(result)
+        })
 
         // post 
         app.post("/bidassignment", async (req, res) => {

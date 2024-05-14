@@ -35,9 +35,14 @@ async function run() {
         const bidCollection = client.db("assignmentproject").collection("bidassignment");
 
         app.get("/allproject", async (req, res) => {
-            const result = await alltaskCollection.find().toArray()
+            const filter = req.query.filter;
+            let query = {};
+            if (filter) query = { level: filter }
+            const result = await alltaskCollection.find(query).toArray()
             res.send(result)
         });
+
+
         app.delete("/allproject/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
@@ -109,7 +114,7 @@ async function run() {
                 $set: {
                     status: body.status,
                     obtainedmarks: body.obtainedmarks,
-                    textarea : body.textarea
+                    textarea: body.textarea
                 },
             };
             const result = await bidCollection.updateOne(filter, updateDoc);
